@@ -12,7 +12,8 @@ class Command(BaseCommand):
             last_name='adminov',
             is_superuser=True,
             is_staff=True,
-            is_active=True
+            is_active=True,
+            role='moderator'
         )
 
         user.set_password('2344')

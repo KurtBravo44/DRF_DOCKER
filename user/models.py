@@ -2,8 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from materials.models import Course, Lesson
-
+from django.utils.translation import gettext_lazy as _
 NULLABLE = {'null': True, 'blank': True}
+
+class UserRole(models.TextChoices):
+    MEMBER = 'member', _('member')
+    MODERATOR = 'moderator', _('moderator')
 
 
 class User(AbstractUser):
@@ -14,6 +18,7 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='users/', verbose_name='аватар', **NULLABLE)
     city = models.CharField(max_length=50, verbose_name='город', **NULLABLE)
     phone = models.IntegerField(verbose_name='телефон', **NULLABLE)
+    role = models.CharField(max_length=9, choices=UserRole.choices, default=UserRole.MEMBER)
 
     is_superuser = models.BooleanField(default=False, verbose_name='администратор')
     is_staff = models.BooleanField(default=False, verbose_name='сотрудник')
