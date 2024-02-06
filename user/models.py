@@ -3,7 +3,7 @@ from django.db import models
 
 from materials.models import Course, Lesson
 
-NULLABLE = {'null':True, 'blank':True}
+NULLABLE = {'null': True, 'blank': True}
 
 
 class User(AbstractUser):
@@ -27,6 +27,7 @@ payment_methods = (
     ('cash', 'наличные'),
     ('transfer', 'перевод'),
 )
+
 
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')

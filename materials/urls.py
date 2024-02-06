@@ -10,7 +10,7 @@ app_name = MaterialsConfig.name
 
 
 router = DefaultRouter()
-router.register('courses', CourseViewSet, basename='courses')
+router.register(r'courses', CourseViewSet, basename='courses')
 
 urlpatterns = [
     path('lesson/create/', LessonCreateAPIView.as_view(), name='lesson_create'),
@@ -18,4 +18,6 @@ urlpatterns = [
     path('lesson/<int:pk>/', LessonRetrieveAPIView.as_view(), name='lesson_get'),
     path('lesson/update/<int:pk>/', LessonUpdateAPIView.as_view(), name='lesson_update'),
     path('lesson/delete/<int:pk>/', LessonDestroyAPIView.as_view(), name='lesson_delete'),
-] + router.urls
+]
+
+urlpatterns += router.urls

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-NULLABLE = {'null':True, 'blank':True}
+NULLABLE = {'null': True, 'blank': True}
 
 
 class Course(models.Model):

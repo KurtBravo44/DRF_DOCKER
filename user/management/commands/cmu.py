@@ -10,8 +10,8 @@ class Command(BaseCommand):
             email='moderator@mail.ru',
             first_name='moderator',
             last_name='moderatorov',
-            is_superuser=False,
             is_staff=True,
+            is_superuser=False,
             is_active=True
         )
 
