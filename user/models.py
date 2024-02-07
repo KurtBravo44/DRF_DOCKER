@@ -5,6 +5,7 @@ from materials.models import Course, Lesson
 from django.utils.translation import gettext_lazy as _
 NULLABLE = {'null': True, 'blank': True}
 
+
 class UserRole(models.TextChoices):
     MEMBER = 'member', _('member')
     MODERATOR = 'moderator', _('moderator')

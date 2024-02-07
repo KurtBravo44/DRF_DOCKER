@@ -1,7 +1,8 @@
 # from django.shortcuts import render
 from rest_framework import viewsets, generics, permissions
+
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+
 
 from materials.models import Course, Lesson
 from materials.permissions import IsOwner, IsModerator
