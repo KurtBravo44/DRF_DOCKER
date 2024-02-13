@@ -127,7 +127,7 @@ class SubscripeTestCase(APITestCase):
             'course': self.course.pk
         }
         response = self.client.post(
-            reverse('materials:course_subs', kwargs={'pk': self.course.pk}),
+            reverse('materials:sub_create', kwargs={'pk': self.course.pk}),
             data=data
         )
 
@@ -139,7 +139,7 @@ class SubscripeTestCase(APITestCase):
     def test_list_subs(self):
         """create subs"""
         response = self.client.get(
-            reverse('materials:course_subs_list')
+            reverse('materials:sub_list')
         )
 
         self.assertEqual(
@@ -155,6 +155,6 @@ class SubscripeTestCase(APITestCase):
         )
 
         response = self.client.delete(
-            reverse('materials:course_subs_delete', kwargs={'pk': self.course.pk, 'subscription_pk': subs.pk})
+            reverse('materials:sub_delete', kwargs={'pk': self.course.pk})
         )
 

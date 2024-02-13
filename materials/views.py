@@ -105,9 +105,9 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         course_id = self.kwargs.get('pk')
-        subscription_id = self.kwargs.get('subscription_pk')
+        user_id = self.request.user.pk
 
-        subscription = Subscription.objects.get(pk=subscription_id, course=course_id)
+        subscription = Subscription.objects.get(course_id=course_id, user_id=user_id)
 
         if self.request.user != subscription.user:
             raise serializers.ValidationError('Это не ваша подписка')

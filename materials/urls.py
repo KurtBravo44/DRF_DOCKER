@@ -20,9 +20,9 @@ urlpatterns = [
     path('lesson/update/<int:pk>/', LessonUpdateAPIView.as_view(), name='lesson_update'),
     path('lesson/delete/<int:pk>/', LessonDestroyAPIView.as_view(), name='lesson_delete'),
 
-    path('courses/<int:pk>/subs/', SubscriptionCreateAPIView.as_view(), name='course_subs'),
-    path('courses/subs/list/', SubscriptionListAPIView.as_view(), name='course_subs_list'),
-    path('courses/<int:pk>/subs/delete/<int:subscription_pk>/', SubscriptionDestroyAPIView.as_view(), name='course_subs_delete'),
+    path('courses/<int:pk>/sub/', SubscriptionCreateAPIView.as_view(), name='sub_create'),
+    path('sub/list/', SubscriptionListAPIView.as_view(), name='sub_list'),
+    path('courses/<int:pk>/unsub/', SubscriptionDestroyAPIView.as_view(), name='sub_delete'),
 
 ]
 
