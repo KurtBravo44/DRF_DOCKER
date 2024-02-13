@@ -21,3 +21,5 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
+
+
