@@ -11,6 +11,7 @@ class Course(models.Model):
     image = models.ImageField(upload_to='materials/course/', **NULLABLE, verbose_name='превью')
     description = models.TextField(verbose_name='описание', **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, verbose_name='владелец')
+    price = models.IntegerField(null=True, blank=True, verbose_name='цена')
 
     def __str__(self):
         return self.title
@@ -27,6 +28,8 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='описание', **NULLABLE)
     link = models.TextField(verbose_name='ссылка', **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, verbose_name='владелец')
+    price = models.IntegerField(null=True, blank=True, verbose_name='цена')
+
 
     def __str__(self):
         return self.title

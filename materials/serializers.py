@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from materials.models import Course, Lesson, Subscription
+from materials.services import buy
 from materials.validators import LinkValidator
-
+from user.models import Payment
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -26,7 +27,6 @@ class CourseSerializer(serializers.ModelSerializer):
                                                     course=instance).exists()
         return is_subscribed
 
-
     def get_lesson_count(self, instance):
         return instance.lesson_set.all().count()
 
@@ -42,4 +42,20 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField(read_only=True)
+
+
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+    def get_url(self, instance):
+        response = buy(
+            name=instance.course.title,
+            price=int(instance.course.price) * 100
+        )
+        return response['url']
 

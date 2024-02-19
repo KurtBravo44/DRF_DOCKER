@@ -36,13 +36,13 @@ payment_methods = (
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', null=True)
 
     date = models.DateField(auto_now_add=True, verbose_name='дата')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', blank=True, null=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='урок', blank=True, null=True)
-    amount = models.IntegerField(verbose_name='сумма')
-    method = models.CharField(max_length=8, choices=payment_methods, verbose_name='способ оплаты')
+    amount = models.IntegerField(verbose_name='сумма', null=True)
+    method = models.CharField(max_length=8, choices=payment_methods, verbose_name='способ оплаты', null=True)
 
     def __str__(self):
         return f'{self.user}: {self.course if self.course else self.lesson}'

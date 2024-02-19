@@ -9,10 +9,12 @@ from rest_framework.response import Response
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import LessonCoursePaginator
 from materials.permissions import IsOwner, IsModerator
-from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer, PaymentSerializer
+from user.models import Payment
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    """ ViewSet for course """
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     pagination_class = LessonCoursePaginator
@@ -114,3 +116,24 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
         else:
             self.perform_destroy(subscription)
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PaymentCreateAPIView(generics.CreateAPIView):
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        course_id = self.kwargs.get('pk')
+        course = Course.objects.get(pk=course_id)
+        user = self.request.user
+
+        if Payment.objects.filter(user=self.request.user, course=course).exists():
+            raise serializers.ValidationError("Этот платёж уже существует!")
+
+        else:
+            new_pay = serializer.save(
+                user=user,
+                course=course,
+                amount=int(course.price) * 100,
+                method='перевод'
+            )
