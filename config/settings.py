@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+import smtplib
+from datetime import timedelta
 from pathlib import Path
 
 import dotenv
@@ -46,6 +48,8 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_yasg',
     'corsheaders',
+
+    'django_celery_beat',
 
     'user',
     'materials',
@@ -120,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -163,3 +167,22 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 API_KEY = os.getenv('API_KEY')
+
+EMAIL_KEY = os.getenv('EMAIL_KEY')
+FROM_EMAIL = os.getenv('FROM_EMAIL')
+SMTP_SERVER = smtplib.SMTP('smtp.mail.ru: 25')
+
+# CELERY
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+CELERY_TIMEZONE = "UTC"
+
+CELERY_BEAT_SCHEDULE = {
+    'diactivate': {
+        'task': 'materials.tasks.diactivate_user',  # Путь к задаче
+        'schedule': timedelta(seconds=20),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
+}

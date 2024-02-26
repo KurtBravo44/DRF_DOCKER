@@ -1,4 +1,5 @@
 # from django.shortcuts import render
+from django.http import HttpResponse
 from rest_framework import viewsets, generics, permissions, serializers, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
@@ -10,6 +11,7 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginators import LessonCoursePaginator
 from materials.permissions import IsOwner, IsModerator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer, PaymentSerializer
+from materials.tasks import send_mail_about_update
 from user.models import Payment
 
 
@@ -31,6 +33,18 @@ class CourseViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+    def update(self, request, *args, **kwargs):
+        course_id = self.kwargs['pk']
+        course = Course.objects.get(pk=course_id)
+        for field in request.data:
+            if hasattr(course, field):
+                setattr(course, field, request.data[field])
+
+        subs_list = course.subscription_set.all()
+        for sub in subs_list:
+            send_mail_about_update.delay(sub.user.email)
+        return Response({'Result': 200})
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
@@ -72,6 +86,7 @@ class SubscriptionCreateAPIView(generics.CreateAPIView):
     а также, если подписка уже есть, он не создает новую"""
     serializer_class = SubscriptionSerializer
     permission_classes = [permissions.IsAuthenticated]
+    swagger_fake_view = False
 
     def perform_create(self, serializer):
         course_id = self.kwargs.get('pk')
@@ -119,8 +134,12 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
 
 
 class PaymentCreateAPIView(generics.CreateAPIView):
+
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Payment.objects.all()
 
     def perform_create(self, serializer):
         course_id = self.kwargs.get('pk')
